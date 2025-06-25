@@ -8,6 +8,8 @@ use Illuminate\Notifications\Notifiable;
 
 class Review extends Model
 {
+    protected $fillable = ['review', 'rating'];
+
     /** @use HasFactory<\Database\Factories\TaskFactory> */
     use HasFactory, Notifiable;
     public function book(){
@@ -17,5 +19,6 @@ class Review extends Model
     protected static function booted(){
         static::updated(fn (Review $review) => cache()->forget('book:' . $review->book_id));
         static::deleted(fn (Review $review) => cache()->forget('book:' . $review->book_id));
+        static::created(fn (Review $review) => cache()->forget('book:' . $review->book_id));
     }
 }

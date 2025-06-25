@@ -3,13 +3,31 @@
 @section('content')
     <h1 class="mb-10 text-2xl">Books</h1>
 
-    <form method="GET" action="{{route('books.index')}}" class="mb-4 flex items-center gap-2">
-        <input type="text" name="title" value="{{request('title')}}" placeholder="Search by title"
-            class="input h-10"/>
-        <input class="hidden" name="filter" value="{{request('filter')}}"/>
+    <form method="GET" action="{{ route('books.index') }}" class="mb-4 flex items-center gap-2">
+        <input type="text" name="title" value="{{ request('title') }}" placeholder="Search by title" class="input h-10" />
+        <input class="hidden" name="filter" value="{{ request('filter') }}" />
         <button type="submit" class="btn h-10">Search</button>
-        <a href="{{route('books.index')}}" class="btn h-10">Clear</a>
+        <a href="{{ route('books.index') }}" class="btn h-10">Clear</a>
     </form>
+
+    <div class="filter-container mb-4 flex">
+        @php
+            $filter = [
+                '' => 'latest',
+                'popular_last_month' => 'Popular Last Month',
+                'popular_last_6months' => 'Popular Last 6 Months',
+                'highest_rated_last_month' => 'Highest Rated Last Month',
+                'highest_rated_last_6months' => 'Highest Rated Last 6 Months',
+            ];
+        @endphp
+
+        @foreach ($filter as $key => $label)
+            <a href="{{ route('books.index', [...request()->query(), 'filter'=> $key]) }}"
+                class="{{ request('filter') === $key || (request('filter') === null && $key === '') ? 'filter-item-active' : 'filter-item' }}">
+                {{$label}}
+            </a>
+        @endforeach
+    </div>
 
     <ul>
         @forelse ($books as $book)
